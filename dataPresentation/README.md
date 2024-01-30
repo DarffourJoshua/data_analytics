@@ -1,0 +1,1 @@
+This project focuses on modifying the x and y values from a given dataset or a file which is dynamically selected by the user. It alsso visualise the data use to the user chart preferences and base on the data presentation there is a prediction.

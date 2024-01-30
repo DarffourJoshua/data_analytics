@@ -1,0 +1,23 @@
+:root {
+  --line-col: rgb(65, 65, 65);
+  --row-bg: #96d4d466;
+}
+
+
+tr:nth-child(even) {
+  background-color: var(--row-bg);
+}
+
+tr{
+  outline: 1px solid var(--line-col);
+
+}
+
+
+td:not(:last-child), th:not(:last-child){
+  border-right: solid 1px var(--line-col);
+}
+
+td,th{
+  padding: 5px 10px;
+}
