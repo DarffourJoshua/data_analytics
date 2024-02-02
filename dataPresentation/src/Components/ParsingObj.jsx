@@ -1,39 +1,36 @@
 import { useState, } from "react";
-import {usePapaParse, useCSVReader, formatFileSize} from 'react-papaparse';
-import PropTypes from 'prop-types';
+import {useCSVReader, formatFileSize} from 'react-papaparse';
 import styles from "./styles";
+import PropTypes from "prop-types";
 const DEFAULT_REMOVE_HOVER_COLOR = '#A01919';
 
-function ReadCSV () {
-    const { CSVReader } = useCSVReader();
-    const [column, setColumn] = useState([]);
-    const [value, setValue] = useState([]);
-    const [zoneHover, setZoneHover] = useState(false);
-    const [removeHoverColor, setRemoveHoverColor] = useState(
-        DEFAULT_REMOVE_HOVER_COLOR
-      );
+export default function ReadCSV (props) {
+  const { CSVReader } = useCSVReader();
+  const [zoneHover, setZoneHover] = useState(false);
+  const [removeHoverColor, setRemoveHoverColor] = useState(DEFAULT_REMOVE_HOVER_COLOR);
+  const {getColumns, getData} = props;
+  
+  return (
+    <CSVReader
+      onUploadAccepted = {results => {
+        const value = results.data;
+        const filtered = value.filter((_, i) => i !== 0);
+        getColumns(value[0]);
+        getData(filtered);
+      }}
+        
+      onDragOver={(event) => {
+        event.preventDefault();
+        setZoneHover(true);
+      }}
 
-    return (
-        <CSVReader
-            onUploadAccepted = {results => {
-                const value = results.data;
-                const filtered = value.filter((_, i) => i !== 0);
-                setColumn(value[0]);
-                setValue(filtered)
-            }}
-
-            onDragOver={(event) => {
-                event.preventDefault();
-                setZoneHover(true);
-            }}
-
-            onDragLeave={(event) => {
-                event.preventDefault();
-                setZoneHover(false);
-            }}
-        >
-        {({
-            getRootProps,
+      onDragLeave={(event) => {
+        event.preventDefault();
+        setZoneHover(false);
+      }} 
+    >
+      {({
+        getRootProps,
             acceptedFile,
             ProgressBar,
             getRemoveFileProps,
@@ -86,33 +83,7 @@ function ReadCSV () {
       );
 }
 
-function ReadRemoteFile(props) {
-    const { readRemoteFile } = usePapaParse();
-    
-
-    const handleReadRemoteFile = () => {
-        const { link } = props;
-
-        readRemoteFile(link, {
-            header: true,
-            worker: true,
-            download: true,
-            complete: (results) => {
-                const value = [];
-                const column= [];
-
-                results.data.map(d => {
-                    value.push(Object.values(d));
-                    column.push(Object.keys(d));
-                })
-            },
-        });
-    };
-    return <button onClick={handleReadRemoteFile}>readRemoteFile</button>;
+ReadCSV.propTypes = {
+  getColumns: PropTypes.func.isRequired,
+  getData: PropTypes.func.isRequired
 }
-
-ReadRemoteFile.propTypes = {
-    link: PropTypes.string.isRequired,
-};
-
-export {ReadCSV, ReadRemoteFile}
