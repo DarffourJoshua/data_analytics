@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 export default function SelectXY(props) {
-    const {columns, xyValues, handleXYValues, getColumnValues} = props
+    const {columns, xyValues, handleXYValues,} = props
     return(
        <article>
         <label 
@@ -31,23 +31,6 @@ export default function SelectXY(props) {
         <option value="" disabled>Select an option</option>
         {columns.map(ycol => (<option value={ycol} key={ycol}>{ycol}</option>))}
          </select>
-
-         {xyValues.xvalues && xyValues.yvalues && (
-            <div>
-                <h3>Selected X Column Values: </h3>
-                <ul>
-                    {getColumnValues(xyValues.xvalues).map((value, index) => (
-                        <li key={index}>{value}</li>
-                    ))}
-                </ul>
-                <h3>Selected Y Column Values:</h3>
-                <ul>
-                    {getColumnValues(xyValues.yvalues).map((value, index) => (
-                        <li key={index}>{value}</li>
-                    ))}
-                </ul>
-            </div>
-         )}
        </article>
     );
 }

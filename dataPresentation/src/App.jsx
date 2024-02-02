@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState,  } from 'react';
 import './App.css';
 import ReadCSV from './Components/ParsingObj'
 import ReadRemoteFile from './Components/ReadRemoteFile';
 import SelectXY from './Components/SelecyXY';
 
-function App() {
+export default function App() {
   const [inputLink, setInputLink] = useState("");
   const [colHeads, setColHeads] = useState([]);
   const [csvData, setCsvData] = useState([]);
@@ -12,6 +12,10 @@ function App() {
     xvalues: '',
     yvalues: '',
   });
+  const storeXYValues = {
+    x:[],
+    y:[]
+  }
 
   function handleXYValues(e) {
     e.preventDefault();
@@ -21,17 +25,15 @@ function App() {
     ))
   }
 
-  const getColumnValues = val => {
-    return csvData.slice(1).map(r => r[val]);
+  const getColumnValues = (column, selectedColumn) => {
+    const columnIndex = colHeads.indexOf(selectedColumn);
+    return csvData.map(row => row[columnIndex]);
   }
 
-  useEffect(() => {
-    console.log(`X values: ${getColumnValues(values.xvalues)}`);
-    console.log(`Y values: ${getColumnValues(values.yvalues)}`);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, csvData]);
+  storeXYValues.x.push(getColumnValues('x', values.xvalues))
+  storeXYValues.y.push(getColumnValues('y', values.yvalues))
 
-   
+  console.log(storeXYValues)
   const handleChange = (e) => {
     setInputLink(e.target.value)
   }
@@ -69,5 +71,3 @@ function App() {
     </section>
   );
 }
-
-export default App
